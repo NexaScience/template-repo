@@ -17,19 +17,15 @@ def add(a: float, b: float) -> float:
 ## Run locally
 
 ```bash
-pip install .
-PORT=8000 mcp-server
+pip install -r requirements.txt
+PORT=8000 python src/mcp_server/server.py
 # MCP endpoint: http://localhost:8000/mcp/
-```
-
-Or with uvicorn directly:
-
-```bash
-uvicorn mcp_server.server:app --host 0.0.0.0 --port 8000
 ```
 
 ## Deploy (lnar)
 
-- No Dockerfile needed — lnar generates one from `pyproject.toml`.
+- No Dockerfile needed — lnar installs `requirements.txt` and runs the server from source.
+- Dependencies live in `requirements.txt`. This is **not** a pip-installable package,
+  so there is no build step (and no `pip install .` ordering trap).
 - The server binds `0.0.0.0:$PORT` and exposes the MCP endpoint at **`/mcp/`** over Streamable HTTP.
-- Start command: `uvicorn mcp_server.server:app --host 0.0.0.0 --port $PORT`
+- Start command: `python src/mcp_server/server.py` (reads `$PORT`).
