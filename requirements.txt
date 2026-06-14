@@ -1,6 +1,0 @@
-# MCP server runtime dependencies.
-# lnar installs these with `pip install -r requirements.txt`, then runs the
-# server straight from source — the scaffold is NOT a pip-installable package,
-# so no build step (and no README/src ordering trap) is involved.
-fastmcp>=3.2.3
-uvicorn>=0.30
