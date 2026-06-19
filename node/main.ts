@@ -39,7 +39,18 @@ app.post("/mcp", async (req, res) => {
 
 // HARD REQUIREMENT: read the port from PORT and bind 0.0.0.0 (never localhost,
 // never a hard-coded port) so the lnar deployment can reach the server.
-const port = Number(process.env.PORT ?? "8000");
+// Guard against a missing/invalid injected PORT (non-numeric or outside the
+// 1-65535 range): fall back to 8000 so the server still starts and the deploy
+// readiness probe can reach it.
+function resolvePort(raw: string | undefined): number {
+  const parsed = Number(raw);
+  if (Number.isInteger(parsed) && parsed >= 1 && parsed <= 65535) {
+    return parsed;
+  }
+  return 8000;
+}
+
+const port = resolvePort(process.env.PORT);
 app.listen(port, "0.0.0.0", () => {
   console.log(`MCP server listening on http://0.0.0.0:${port}/mcp`);
 });
